@@ -11,18 +11,12 @@ public class Bus {
         passengers = new Passenger[10];
         countPassengers = 0;
         capacity = 10;
+        currentStop = null;
     }
 
     public void board(Passenger passenger) {
-        if (countPassengers < capacity) {
             add(passenger);
-        } else {
-            resize();
-            add(passenger);
-        }
 
-        // vamos verificar se o onibus está cheio antes de adicionar um passageiro
-        add(passenger);
     }
 
     public void add(Passenger passenger) {
