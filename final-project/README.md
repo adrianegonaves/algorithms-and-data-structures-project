@@ -8,7 +8,7 @@ Este projeto consiste num sistema de simulação de transporte público utilizan
 ## 👥 Equipa
 * **Adriane Gonçalves** - 240000004
 * **Bruno Hortelão** - 240001083
-
+* **Dalila Neves** - 240000925
 ---
 
 ## 🌐 Padronização Linguística (English)
