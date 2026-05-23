@@ -69,7 +69,7 @@ public class Bus {
                 currentBusStop = currentBusStop.previous;
             } else {
                 // The bus hits the end of the bus line and reverses the way back
-                direction = true; // Corrigido de false para true
+                direction = true; 
                 if (currentBusStop.next != null) {
                     currentBusStop = currentBusStop.next;
                 }
