@@ -18,27 +18,25 @@ public class PassengerQueue {
     }
 
     public void enqueue(Passenger passenger) {
-        if (size < queue.length) {
-            rear = (rear + 1) % queue.length;
-            queue[rear] = passenger;
-            size++;
-            System.out.println("Passageiro " + passenger.getName() + " entrou na fila.");
-        } else {
-
-            resize(queue);
+        if (size == queue.length) {
+            resize(queue); 
         }
+        queue[rear] = passenger; 
+        rear = (rear + 1) % queue.length; 
+        size++;
+        System.out.println("Passenger " + passenger.getName() + " joined the queue.");
     }
 
     public Passenger dequeue() {
         if (size > 0) {
             Passenger value = queue[front];
-            System.out.println("Passageiro " + value.getName() + " saiu da fila.");
+            System.out.println("Passenger " + value.getName() + " has left the queue.");
             front = (front + 1) % queue.length;
             size--;
 
             return value;
         } else {
-            throw new RuntimeException("Atenção: a fila está vazia");
+            throw new RuntimeException("Alert: The queue is empty!");
         }
     }
 
@@ -48,7 +46,7 @@ public class PassengerQueue {
 
     // Double the queue size in case it is full
     private void resize(Passenger[] queue) {
-        
+
         Passenger[] newQueue = new Passenger[queue.length * 2];
 
         int current = front;

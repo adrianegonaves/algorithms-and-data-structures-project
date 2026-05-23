@@ -26,27 +26,48 @@ public class BusLine {
         size++;
     }
 
-    // Vamos implementar com a remoção em qualquer lado?
-    public void removeBusStop(String name) {
 
-        BusStop current = root;
-
-        // Line is empty
-        if(root == null) {
-            System.out.println("There are no Bus Stops to remove!");
+    public void removeBusStop(String targetName) {
+    
+        if (root == null) {
+            System.out.println("The Bus Line is empty.");
             return;
         }
 
-        // Line has 1 element
-        if (current.next == null) {
-            root = null;
-            
+        // The BusStop to remove is the root
+        if (root.getName().equals(targetName)) {
+            root = root.next; 
+            if (root != null) {
+                root.previous = null; 
+            }
+            System.out.println("Bus stop " + targetName + " removed from the start of the line.");
+            return;
         }
 
-        // Line has 2 elements
-        
+        // We must search in case it's not the previous cases
+        BusStop current = root;
+        while (current != null && !current.getName().equals(targetName)) {
+            current = current.next;
+        }
+
+        // We didn't find the stop
+        if (current == null) {
+            System.out.println("Bus stop " + targetName + " is not part of this line.");
+            return;
+        }
 
 
+        // stop to remove is the last one
+        if (current.next == null) {
+            current.previous.next = null; 
+            System.out.println("Bus stop " + targetName + " removed from the end.");
+        }
+        // the stop is somewhere in the middle
+        else {
+            current.previous.next = current.next;
+            current.next.previous = current.previous; 
+            System.out.println("Bus stop " + targetName + " removed.");
+        }
 
     }
 

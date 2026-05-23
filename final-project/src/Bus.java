@@ -69,7 +69,7 @@ public class Bus {
 
         Passenger removed = passengers[front];
         passengers[front] = null;
-        
+
         front = (front + 1) % passengers.length;
         countPassengers--;
 
@@ -147,7 +147,7 @@ public class Bus {
         int currentIdx = front;
         for (int i = 0; i < countPassengers; i++) {
             System.out.println("- " + passengers[currentIdx].getName());
-            currentIdx = (currentIdx + 1) % passengers.length; // Avanço circular
+            currentIdx = (currentIdx + 1) % passengers.length; 
         }
     }
 
