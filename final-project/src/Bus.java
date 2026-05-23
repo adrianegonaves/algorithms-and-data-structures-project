@@ -54,27 +54,28 @@ public class Bus {
 
     // This method is used to make the bus advanced down the line
     public void advance() {
-
-        if (direction) {
-
+        if (direction) { // Going forward(True)
             if (currentBusStop.next != null) {
                 currentBusStop = currentBusStop.next;
             } else {
-                currentBusStop = currentBusStop.previous;
+                // The bus hits the end of the bus line and reverses the way
                 direction = false;
+                if (currentBusStop.previous != null) {
+                    currentBusStop = currentBusStop.previous;
+                }
             }
-
-        } else {
+        } else { // Coming back (False)
             if (currentBusStop.previous != null) {
                 currentBusStop = currentBusStop.previous;
             } else {
-                currentBusStop = currentBusStop.next;
-                direction = false;
+                // The bus hits the end of the bus line and reverses the way back
+                direction = true; // Corrigido de false para true
+                if (currentBusStop.next != null) {
+                    currentBusStop = currentBusStop.next;
+                }
             }
-
         }
     }
-
 
     public Passenger get(int index) {
         return passengers[index];
