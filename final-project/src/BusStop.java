@@ -1,22 +1,19 @@
 public class BusStop {
-    
-    private String name;
-    private PassengerQueue queue;
 
-    Connection next;
-    Connection previous;
+    String name;
+    PassengerQueue queue;
+
+    // Connection next;
+    // Connection previous;
+
+    BusStop previous;
+    BusStop next;
 
     public BusStop(String name) {
         this.name = name;
         previous = null;
         next = null;
-        
+
     }
 
-    
-
-    
-    
-    
-    
 }

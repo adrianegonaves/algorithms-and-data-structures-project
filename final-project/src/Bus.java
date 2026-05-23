@@ -8,14 +8,16 @@ public class Bus {
     private Passenger[] passengers;
     private int countPassengers;
     private int capacity;
-    private BusStop currentStop;
+    private BusStop currentBusStop;
+    private boolean direction; // if true the bus is going forward down the line, if false, it is returning
 
+    // CONSTRUCTORS
     // construtor inicializa o ônibus com capacidade de 5 passageiros
     public Bus() {
         passengers = new Passenger[5];
         countPassengers = 0;
         capacity = 5;
-        currentStop = null;
+        currentBusStop = null;
     }
 
     // Se quisermos com tamanho ajustável
@@ -23,8 +25,10 @@ public class Bus {
         passengers = new Passenger[size];
         countPassengers = 0;
         capacity = size;
-        currentStop = null;
+        currentBusStop = null;
     }
+
+    // ACTIONS
 
     public void board(Passenger passenger) {
         add(passenger);
@@ -47,6 +51,30 @@ public class Bus {
 
         }
     }
+
+    // This method is used to make the bus advanced down the line
+    public void advance() {
+
+        if (direction) {
+
+            if (currentBusStop.next != null) {
+                currentBusStop = currentBusStop.next;
+            } else {
+                currentBusStop = currentBusStop.previous;
+                direction = false;
+            }
+
+        } else {
+            if (currentBusStop.previous != null) {
+                currentBusStop = currentBusStop.previous;
+            } else {
+                currentBusStop = currentBusStop.next;
+                direction = false;
+            }
+
+        }
+    }
+
 
     public Passenger get(int index) {
         return passengers[index];
