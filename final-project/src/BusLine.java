@@ -22,6 +22,7 @@ public class BusLine {
                 current = current.next;
             }
             current.next = newBusStop;
+            newBusStop.previous = current;
         }
         size++;
     }
@@ -79,7 +80,7 @@ public class BusLine {
         while (current != null) {
             System.out.print("[" + current.getName() + " (People in queue: " + current.queue.getSize() + ")]");
             if (current.next != null) {
-                System.out.print(current.name + " -> ");
+                System.out.print(" -> ");
 
             }
             current = current.next;

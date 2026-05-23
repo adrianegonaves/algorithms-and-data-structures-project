@@ -19,7 +19,7 @@ public class PassengerQueue {
 
     public void enqueue(Passenger passenger) {
         if (size == queue.length) {
-            resize(queue); 
+            resize(); 
         }
         queue[rear] = passenger; 
         rear = (rear + 1) % queue.length; 
@@ -45,7 +45,7 @@ public class PassengerQueue {
     }
 
     // Double the queue size in case it is full
-    private void resize(Passenger[] queue) {
+    private void resize() {
 
         Passenger[] newQueue = new Passenger[queue.length * 2];
 
@@ -58,7 +58,7 @@ public class PassengerQueue {
             current = (current + 1) % queue.length;
         }
 
-        queue = newQueue;
+        this.queue = newQueue;
         front = 0;
         rear = size;
 
