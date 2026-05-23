@@ -9,7 +9,7 @@ public class PassengerQueue {
     public PassengerQueue(int capacity) {
         queue = new Passenger[capacity];
         front = 0;
-        rear = -1;
+        rear = 0;
         size = 0;
     }
 

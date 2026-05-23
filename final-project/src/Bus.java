@@ -17,14 +17,7 @@ public class Bus {
     // CONSTRUCTORS
     // Default bus size is 5
     public Bus() {
-        passengers = new Passenger[5];
-        countPassengers = 0;
-        capacity = 5;
-        busLine = null;
-        currentBusStop = null;
-        direction = true;
-        front = 0;
-        rear = 0;
+        this(5);
     }
 
     // A size can be set
@@ -35,6 +28,8 @@ public class Bus {
         busLine = null;
         currentBusStop = null;
         direction = true;
+        front = 0;
+        rear = 0;
     }
 
     // ACTIONS
@@ -64,7 +59,6 @@ public class Bus {
         }
     }
 
-
     public Passenger remove() {
         if (countPassengers == 0) {
             System.out.println("Bus is empty!");
@@ -72,7 +66,7 @@ public class Bus {
         }
 
         Passenger removed = passengers[front];
-        passengers[front] = null; 
+        passengers[front] = null;
 
         // Avança a frente de forma circular
         front = (front + 1) % passengers.length;
@@ -82,8 +76,15 @@ public class Bus {
     }
 
     public void disembark(int nDisembark) {
-        for (int i = 0; i < nDisembark; i++) {
+       
+        if (nDisembark > countPassengers) {
+            System.out.println("ALERT: Cannot disembark " + nDisembark + " passengers. Only " + countPassengers
+                    + " are on board.");
+            nDisembark = countPassengers; // This way it will remove all passengers on board
+        }
 
+        for (int i = 0; i < nDisembark; i++) {
+            remove();
         }
     }
 
@@ -92,36 +93,42 @@ public class Bus {
         if (busLine == null || currentBusStop == null) {
             System.out.println("ALERT: Either the BusLine hasn't been defined or it has no stops!");
         } else {
-            advance(currentBusStop);
-        }
-    }
-
-    private void advance(BusStop current) {
-        if (direction) { // Going forward(True)
-            if (currentBusStop.next != null) {
-                currentBusStop = currentBusStop.next;
-            } else {
-                // The bus hits the end of the bus line and reverses the way
-                direction = false;
-                if (currentBusStop.previous != null) {
-                    currentBusStop = currentBusStop.previous;
-                }
-            }
-        } else { // Coming back (False)
-            if (currentBusStop.previous != null) {
-                currentBusStop = currentBusStop.previous;
-            } else {
-                // The bus hits the end of the bus line and reverses the way back
-                direction = true;
+            if (direction) { // Going forward(True)
                 if (currentBusStop.next != null) {
                     currentBusStop = currentBusStop.next;
+                } else {
+                    // The bus hits the end of the bus line and reverses the way
+                    direction = false;
+                    if (currentBusStop.previous != null) {
+                        currentBusStop = currentBusStop.previous;
+                    }
+                }
+            } else { // Coming back (False)
+                if (currentBusStop.previous != null) {
+                    currentBusStop = currentBusStop.previous;
+                } else {
+                    // The bus hits the end of the bus line and reverses the way back
+                    direction = true;
+                    if (currentBusStop.next != null) {
+                        currentBusStop = currentBusStop.next;
+                    }
                 }
             }
         }
     }
 
-    public Passenger get(int index) {
-        return passengers[index];
+    public void getPassengers() {
+        if (countPassengers == 0) {
+            System.out.println("The bus has no passengers.");
+            return;
+        }
+
+        System.out.println("Passengers on board (from first to last):");
+        int currentIdx = front;
+        for (int i = 0; i < countPassengers; i++) {
+            System.out.println("- " + passengers[currentIdx].getName()); 
+            currentIdx = (currentIdx + 1) % passengers.length; // Avanço circular
+        }
     }
 
     public int size() {
