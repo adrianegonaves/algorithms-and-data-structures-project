@@ -46,20 +46,27 @@ public class PassengerQueue {
         return size == 0;
     }
 
-    // Duplica o tamanho da fila de passageiros atual em caso de estar completa
+    // Double the queue size in case it is full
     private void resize(Passenger[] queue) {
-
+        
         Passenger[] newQueue = new Passenger[queue.length * 2];
 
-        for (int i = 0; i < queue.length; i++) {
-            newQueue[i] = queue[i];
+        int current = front;
+
+        // Considering we are using a circular array for the queue
+        // the copy works differently
+        for (int i = 0; i < size; i++) {
+            newQueue[i] = queue[current];
+            current = (current + 1) % queue.length;
         }
 
         queue = newQueue;
+        front = 0;
+        rear = size;
 
     }
 
-    public int getSize(){
+    public int getSize() {
         return size;
     }
 }

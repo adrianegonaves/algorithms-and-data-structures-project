@@ -51,13 +51,12 @@ public class Bus {
         if (countPassengers == capacity) {
             System.out.println("ALERT: Bus is full!");
         } else {
-            // Guarda o passageiro na posição correta do fim
+           
             passengers[rear] = passenger;
 
-            // Avança o ponteiro 'rear' de forma circular
+            // Increase the 'rear' pointer in a circular way
             rear = (rear + 1) % passengers.length;
 
-            // Incrementa o total de pessoas a bordo
             countPassengers++;
         }
     }
@@ -70,8 +69,7 @@ public class Bus {
 
         Passenger removed = passengers[front];
         passengers[front] = null;
-
-        // Avança a frente de forma circular
+        
         front = (front + 1) % passengers.length;
         countPassengers--;
 
