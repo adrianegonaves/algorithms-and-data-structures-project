@@ -1,5 +1,4 @@
 
-
 public class BusLine {
 
     // Attributes
@@ -11,7 +10,7 @@ public class BusLine {
         size = 0;
     }
 
-    // Adiciona uma paragem no fim
+    // add a bus stop at the end of the line
     public void addBusStop(String name) {
         BusStop newBusStop = new BusStop(name);
 
@@ -30,13 +29,38 @@ public class BusLine {
     // Vamos implementar com a remoção em qualquer lado?
     public void removeBusStop(String name) {
 
+        BusStop current = root;
+
+        // Line is empty
+        if(root == null) {
+            System.out.println("There are no Bus Stops to remove!");
+            return;
+        }
+
+        // Line has 1 element
+        if (current.next == null) {
+            root = null;
+            
+        }
+
+        // Line has 2 elements
+        
+
+
+
     }
 
     public void listBusLine() {
 
         BusStop current = root;
+
+        System.out.print("LINE: ");
         while (current != null) {
-            System.out.print(current.name + " -> ");
+            System.out.print("[" + current.getName() + " (People in queue: " + current.queue.getSize() + ")]");
+            if (current.next != null) {
+                System.out.print(current.name + " -> ");
+
+            }
             current = current.next;
         }
         System.out.println();

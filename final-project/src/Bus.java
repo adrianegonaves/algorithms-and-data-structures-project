@@ -4,7 +4,10 @@
 // de um array dinâmico permite que o ônibus possa acomodar um número variável de passageiros sem se 
 // preocupar com o limite inicial do array.
 
+import java.util.concurrent.TimeUnit;
+
 public class Bus {
+
     private Passenger[] passengers;
     private int countPassengers;
     private int capacity;
@@ -76,7 +79,7 @@ public class Bus {
     }
 
     public void disembark(int nDisembark) {
-       
+
         if (nDisembark > countPassengers) {
             System.out.println("ALERT: Cannot disembark " + nDisembark + " passengers. Only " + countPassengers
                     + " are on board.");
@@ -88,33 +91,52 @@ public class Bus {
         }
     }
 
-    // This method is used to make the bus advanced down the line
     public void advance() {
+
         if (busLine == null || currentBusStop == null) {
             System.out.println("ALERT: Either the BusLine hasn't been defined or it has no stops!");
-        } else {
-            if (direction) { // Going forward(True)
-                if (currentBusStop.next != null) {
-                    currentBusStop = currentBusStop.next;
-                } else {
-                    // The bus hits the end of the bus line and reverses the way
-                    direction = false;
-                    if (currentBusStop.previous != null) {
-                        currentBusStop = currentBusStop.previous;
-                    }
-                }
-            } else { // Coming back (False)
+            return;
+        }
+
+        try {
+            System.out.println("Bus moving to the next stop...");
+            TimeUnit.SECONDS.sleep(2);
+
+        } catch (InterruptedException e) {
+            System.out.println("The trip was cut short!");
+            Thread.currentThread().interrupt();
+            return;
+        }
+
+        advanceInternal();
+        System.out.println("Chegou a: " + currentBusStop.getName());
+    }
+
+    // This method is used to make the bus advanced down the line
+    public void advanceInternal() {
+
+        if (direction) { // Going forward(True)
+            if (currentBusStop.next != null) {
+                currentBusStop = currentBusStop.next;
+            } else {
+                // The bus hits the end of the bus line and reverses the way
+                direction = false;
                 if (currentBusStop.previous != null) {
                     currentBusStop = currentBusStop.previous;
-                } else {
-                    // The bus hits the end of the bus line and reverses the way back
-                    direction = true;
-                    if (currentBusStop.next != null) {
-                        currentBusStop = currentBusStop.next;
-                    }
+                }
+            }
+        } else { // Coming back (False)
+            if (currentBusStop.previous != null) {
+                currentBusStop = currentBusStop.previous;
+            } else {
+                // The bus hits the end of the bus line and reverses the way back
+                direction = true;
+                if (currentBusStop.next != null) {
+                    currentBusStop = currentBusStop.next;
                 }
             }
         }
+
     }
 
     public void getPassengers() {
@@ -126,7 +148,7 @@ public class Bus {
         System.out.println("Passengers on board (from first to last):");
         int currentIdx = front;
         for (int i = 0; i < countPassengers; i++) {
-            System.out.println("- " + passengers[currentIdx].getName()); 
+            System.out.println("- " + passengers[currentIdx].getName());
             currentIdx = (currentIdx + 1) % passengers.length; // Avanço circular
         }
     }

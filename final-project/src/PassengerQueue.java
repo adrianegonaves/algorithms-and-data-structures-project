@@ -6,6 +6,10 @@ public class PassengerQueue {
     private int rear;
     private int size;
 
+    public PassengerQueue() {
+        this(5);
+    }
+
     public PassengerQueue(int capacity) {
         queue = new Passenger[capacity];
         front = 0;
@@ -20,7 +24,7 @@ public class PassengerQueue {
             size++;
             System.out.println("Passageiro " + passenger.getName() + " entrou na fila.");
         } else {
-            
+
             resize(queue);
         }
     }
@@ -29,9 +33,9 @@ public class PassengerQueue {
         if (size > 0) {
             Passenger value = queue[front];
             System.out.println("Passageiro " + value.getName() + " saiu da fila.");
-            front = (front + 1) % queue.length; 
+            front = (front + 1) % queue.length;
             size--;
-            
+
             return value;
         } else {
             throw new RuntimeException("Atenção: a fila está vazia");
@@ -47,11 +51,15 @@ public class PassengerQueue {
 
         Passenger[] newQueue = new Passenger[queue.length * 2];
 
-        for(int i = 0; i < queue.length; i++) {
+        for (int i = 0; i < queue.length; i++) {
             newQueue[i] = queue[i];
         }
 
         queue = newQueue;
 
+    }
+
+    public int getSize(){
+        return size;
     }
 }

@@ -13,7 +13,17 @@ public class BusStop {
         this.name = name;
         previous = null;
         next = null;
-
+        queue = new PassengerQueue();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void queue(Passenger passenger) {
+        this.queue.enqueue(passenger);
+    }
+
+
 
 }
