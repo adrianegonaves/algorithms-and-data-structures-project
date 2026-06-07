@@ -18,18 +18,23 @@
 
 import javax.swing.JOptionPane;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.Component;
+import java.awt.Dimension;
+
 public class Main {
     public static void main(String[] args) {
         BusLine line = new BusLine();
         Bus bus = new Bus(5); // Autocarro com capacidade para 5 pessoas
 
-        // Carga automática do cenário de teste para poupar tempo na defesa
+        // Carga automática do cenário de teste
         inicializarCenarioPredefinido(line);
-
-        // Inicializa o autocarro na linha criada (começa na raiz, que será 'Santarém'
-        // após ordenação ou 'Porto' na criação)
         bus.setBusLine(line);
 
+        // Array com o texto de cada botão
         String[] options = {
                 "1. Adicionar Paragem",
                 "2. Remover Paragem",
@@ -42,22 +47,67 @@ public class Main {
         };
 
         while (true) {
-            String selection = (String) JOptionPane.showInputDialog(
-                    null,
-                    "Escolha a operação que deseja realizar:",
-                    "Sistema de Gestão de Linha de Autocarros",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    options,
-                    options[0]);
+            // Criar um painel para organizar os botões verticalmente
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-            if (selection == null || selection.startsWith("0.")) {
+            // Variável para armazenar a opção escolhida pelo utilizador
+            // Usamos um array de um elemento para conseguir alterar o valor dentro do
+            // listener do botão
+            final int[] optionSelected = { -1 };
+
+            // Criar uma janela de diálogo invisível para servir de base ao fecho do menu
+            final JOptionPane optionPane = new JOptionPane(
+                    "Escolha a operação que deseja realizar:",
+                    JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.DEFAULT_OPTION,
+                    null,
+                    new Object[] {}, // Remove os botões padrão (OK/Cancelar)
+                    null);
+
+            // Criar e estilizar um botão para cada opção
+            for (int i = 0; i < options.length; i++) {
+                final int index = i;
+                JButton button = new JButton(options[i]);
+                button.setAlignmentX(Component.CENTER_ALIGNMENT);
+                button.setMaximumSize(new Dimension(280, 35)); // Garante que todos os botões têm o mesmo tamanho
+
+                // Adiciona a ação ao clicar no botão
+                button.addActionListener(e -> {
+                    // Mapeia o índice do botão para a lógica do switch case
+                    // O último botão (índice 7) corresponde à opção 0 (Sair)
+                    optionSelected[0] = (index == 7) ? 0 : (index + 1);
+
+                    // Fecha a janela do menu após o clique
+                    Component comp = (Component) e.getSource();
+                    javax.swing.JDialog dialog = (javax.swing.JDialog) javax.swing.SwingUtilities
+                            .getWindowAncestor(comp);
+                    dialog.dispose();
+                });
+
+                panel.add(button);
+                if (i < options.length - 1) {
+                    panel.add(javax.swing.Box.createRigidArea(new Dimension(0, 8))); // Espaçamento entre botões
+                }
+            }
+
+            // Coloca o painel de botões como o conteúdo da mensagem do JOptionPane
+            optionPane.setMessage(new Object[] { "Escolha a operação que deseja realizar:\n\n", panel });
+
+            // Cria e mostra o diálogo de forma síncrona
+            javax.swing.JDialog dialog = optionPane.createDialog(null, "Sistema de Gestão de Linha de Autocarros");
+            dialog.setVisible(true);
+
+            int option = optionSelected[0];
+
+            // Se o utilizador fechar a janela no 'X' ou carregar em Sair (opção 0)
+            if (option == -1 || option == 0) {
                 JOptionPane.showMessageDialog(null, "A encerrar o sistema. Boa viagem!");
                 break;
             }
 
-            int option = Character.getNumericValue(selection.charAt(0));
-
+            // A partir daqui a tua lógica de switch (case 1, case 2, etc.) mantém-se
+            // exatamente IGUAL
             switch (option) {
                 case 1:
                     String newStop = JOptionPane.showInputDialog(null, "Nome da nova paragem:", "Adicionar Paragem",
@@ -108,8 +158,7 @@ public class Main {
 
                 case 4:
                     int nDisembark = 0;
-                    // Só pergunta quantos desembarcam se houver pessoas dentro do autocarro
-                    if (bus.size() > 0) { // usando o teu método countPassengers ou size()
+                    if (bus.size() > 0) {
                         String input = JOptionPane.showInputDialog(
                                 null,
                                 "Quantos passageiros vão desembarcar na próxima paragem?\n(Passageiros a bordo atualmente: "
@@ -130,19 +179,19 @@ public class Main {
                         JOptionPane.showMessageDialog(null, "O autocarro está vazio. Ninguém para desembarcar.");
                     }
 
-                    // Avança o autocarro aplicando a quantidade escolhida
                     bus.advance(nDisembark);
 
+                    // Ajuste cirúrgico: Usa o método que criaste para ir buscar a paragem correta
+                    // atual
                     JOptionPane.showMessageDialog(
                             null,
-                            "O autocarro efetuou o percurso!\nParagem atual: " + bus.busLine.root.getName()
+                            "O autocarro efetuou o percurso!\nParagem atual: " + bus.getCurrentBusStop().getName()
                                     + "\nConsulte a consola para ver os passageiros que mudaram de fila.",
                             "Simulação de Movimento",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
 
                 case 5:
-                    // Executa e compara ambos por Nome
                     System.out.println("\n=============================================");
                     System.out.println("       COMPARAÇÃO DE ORDENAÇÃO POR NOME      ");
                     System.out.println("=============================================");
@@ -162,7 +211,6 @@ public class Main {
                     break;
 
                 case 6:
-                    // Executa e compara ambos por Nº de Passageiros
                     System.out.println("\n=============================================");
                     System.out.println("   COMPARAÇÃO DE ORDENAÇÃO POR PASSAGEIROS   ");
                     System.out.println("=============================================");
@@ -202,43 +250,30 @@ public class Main {
         }
     }
 
-    /**
-     * Método auxiliar para popular o sistema com um cenário inicial desordenado
-     * tanto a nível alfabético como numérico (filas).
-     */
     private static void inicializarCenarioPredefinido(BusLine line) {
-        // Criar paragens geograficamente e alfabeticamente baralhadas
-        line.addBusStop("Porto"); // Posição inicial 0
-        line.addBusStop("Santarém"); // Posição inicial 1
-        line.addBusStop("Algarve"); // Posição inicial 2
-        line.addBusStop("Lisboa"); // Posição inicial 3
-        line.addBusStop("Braga"); // Posição inicial 4
+        line.addBusStop("Porto");
+        line.addBusStop("Santarém");
+        line.addBusStop("Algarve");
+        line.addBusStop("Lisboa");
+        line.addBusStop("Braga");
 
-        // Aceder aos nós criados para preencher as filas de passageiros
-        // desordenadamente
         BusStop porto = line.root;
         BusStop santarem = porto.next;
         BusStop algarve = santarem.next;
         BusStop lisboa = algarve.next;
         BusStop braga = lisboa.next;
 
-        // Porto terá 1 pessoa
         porto.queue(new Passenger("Manuel"));
 
-        // Santarém terá 3 pessoas
         santarem.queue(new Passenger("Ana"));
         santarem.queue(new Passenger("Rui"));
         santarem.queue(new Passenger("Maria"));
 
-        // Algarve terá 0 pessoas (já está vazio)
-
-        // Lisboa terá 4 pessoas
         lisboa.queue(new Passenger("Carlos"));
         lisboa.queue(new Passenger("Diana"));
         lisboa.queue(new Passenger("Nuno"));
         lisboa.queue(new Passenger("Sofia"));
 
-        // Braga terá 2 pessoas
         braga.queue(new Passenger("Pedro"));
         braga.queue(new Passenger("Inês"));
 

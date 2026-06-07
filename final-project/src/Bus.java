@@ -222,4 +222,8 @@ public class Bus {
                 "Estado final do autocarro nesta paragem: " + countPassengers + "/" + capacity + " passageiros.");
     }
 
+    public BusStop getCurrentBusStop() {
+        return this.currentBusStop;
+    }
+
 }

@@ -6,7 +6,7 @@
  *               Segue a política FIFO e inclui um mecanismo dinâmico de
  *               redimensionamento automático (resize) para expandir a
  *               capacidade da fila sempre que esta se encontre cheia.
- *               * @date: Junho de 2026
+ * @date: Junho de 2026
  * @version: 1.1
  * @authors:
  *           - Adriane Gonçalves - 240000004
