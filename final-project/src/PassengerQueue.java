@@ -1,4 +1,21 @@
-// reutilizamos a estrutura da fila feita em aula para organizar os passageiros
+/**
+ * @file: PassengerQueue.java
+ * @brief: Sistema de Gestão de Linha de Autocarros - Projeto Final AED
+ * @description: Implementação de uma estrutura de dados de Fila
+ *               Circular baseada num array para gerir os passageiros em espera.
+ *               Segue a política FIFO e inclui um mecanismo dinâmico de
+ *               redimensionamento automático (resize) para expandir a
+ *               capacidade da fila sempre que esta se encontre cheia.
+ *               * @date: Junho de 2026
+ * @version: 1.1
+ * @authors:
+ *           - Adriane Gonçalves - 240000004
+ *           - Bruno Hortelão - 240001083
+ * @institution: Instituto Politécnico de Santarém - Escola Superior
+ *               de Gestão e Tecnologia
+ * @course: Licenciatura em Engenharia Informática
+ * @uc: Algoritmos e Estruturas de Dados
+ */
 public class PassengerQueue {
 
     private Passenger[] queue;
@@ -19,10 +36,10 @@ public class PassengerQueue {
 
     public void enqueue(Passenger passenger) {
         if (size == queue.length) {
-            resize(); 
+            resize();
         }
-        queue[rear] = passenger; 
-        rear = (rear + 1) % queue.length; 
+        queue[rear] = passenger;
+        rear = (rear + 1) % queue.length;
         size++;
         System.out.println("Passenger " + passenger.getName() + " joined the queue.");
     }
@@ -52,7 +69,7 @@ public class PassengerQueue {
         int current = front;
 
         // Considering we are using a circular array for the queue
-        // the copy works differently
+        // the copy works differently from the usual array
         for (int i = 0; i < size; i++) {
             newQueue[i] = queue[current];
             current = (current + 1) % queue.length;
