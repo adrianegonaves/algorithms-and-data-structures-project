@@ -2,8 +2,8 @@
  * @file: Passenger.java
  * @brief: Sistema de Gestão de Linha de Autocarros - Projeto Final AED
  * @description: Representa a entidade de um passageiro no sistema.
- *               Contém atributos básicos encapsulados, como o nome do
- *               utilizador, servindo como a unidade fundamental de
+ *               Contém atributos básicos, como o nome do
+ *               utilizador, servindo como a unidade de
  *               dados que transita entre as paragens
  *               e o interior do autocarro.
  * @date: Junho de 2026

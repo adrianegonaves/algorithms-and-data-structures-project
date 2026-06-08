@@ -3,8 +3,8 @@
  * @brief: Sistema de Gestão de Linha de Autocarros - Projeto Final AED
  * @description: Controla o estado e o comportamento do autocarro em circulação. 
  * Utiliza um array circular para gerir dinamicamente os passageiros a bordo, 
- * simula o avanço bidirecional ao longo da linha (inverte a marcha nos terminais) 
- * e coordena os eventos sincronizados de desembarque controlado e embarque em cada paragem.
+ * simula o avanço bidirecional ao longo da linha (inverte a marcha nas paragens terminais) 
+ * e coordena os eventos de desembarque e embarque em cada paragem.
  * @date: Junho de 2026
  * @version: 1.1
  * @authors:
@@ -24,17 +24,17 @@ public class Bus {
     private int capacity;
     private BusStop currentBusStop;
     BusLine busLine;
-    private boolean direction; // if true the bus is going forward down the line, if false, it is returning
+    private boolean direction; // True se o autocarro estiver a andar em frente
     private int rear;
     private int front;
 
     // CONSTRUCTORS
-    // Default bus size is 5
+    // Tamanho por defeito será 5
     public Bus() {
         this(5);
     }
 
-    // A size can be set
+    // Se quisermos o autocarro com tamanho diferente
     public Bus(int size) {
         passengers = new Passenger[size];
         countPassengers = 0;
@@ -46,12 +46,13 @@ public class Bus {
         rear = 0;
     }
 
-    // ACTIONS
+    // Alocar o autocarro a uma linha
     public void setBusLine(BusLine newBusLine) {
         busLine = newBusLine;
         currentBusStop = newBusLine.root;
     }
 
+    // Embarque do passageiro
     public void board(Passenger passenger) {
         add(passenger);
 
@@ -60,12 +61,12 @@ public class Bus {
     public void add(Passenger passenger) {
 
         if (countPassengers == capacity) {
-            System.out.println("ALERT: Bus is full!");
+            System.out.println("ALERTA: Autocarro cheio!");
         } else {
 
             passengers[rear] = passenger;
 
-            // Increase the 'rear' pointer in a circular way
+            // Funcionamento do array circular
             rear = (rear + 1) % passengers.length;
 
             countPassengers++;
@@ -74,7 +75,7 @@ public class Bus {
 
     public Passenger remove() {
         if (countPassengers == 0) {
-            System.out.println("Bus is empty!");
+            System.out.println("Autocarro vazio!");
             return null;
         }
 
@@ -90,9 +91,12 @@ public class Bus {
     public void disembark(int nDisembark) {
 
         if (nDisembark > countPassengers) {
-            System.out.println("ALERT: Cannot disembark " + nDisembark + " passengers. Only " + countPassengers
-                    + " are on board.");
-            nDisembark = countPassengers; // This way it will remove all passengers on board
+            System.out.println("ALERTA: Não pode desembarcar " + nDisembark + " passageiros. Apenas " + countPassengers
+                    + " estão a bordo.");
+            // Se o nDisembark for maior que o num de passageiros no autocarro
+            // apenas vai desembarcar os que estiverem
+            nDisembark = countPassengers; 
+
         }
 
         for (int i = 0; i < nDisembark; i++) {
@@ -100,9 +104,10 @@ public class Bus {
         }
     }
 
+    // Avanço do Autocarro 
     public void advance(int nDisembark) {
         if (busLine == null || currentBusStop == null) {
-            System.out.println("ALERT: Either the BusLine hasn't been defined or it has no stops!");
+            System.out.println("ALERTA: Linha não foi definida ou não tem paragens!");
             return;
         }
 
@@ -111,34 +116,34 @@ public class Bus {
             TimeUnit.SECONDS.sleep(1);
 
         } catch (InterruptedException e) {
-            System.out.println("The trip was cut short!");
+            System.out.println("A viagem acabou inesperadamente!");
             Thread.currentThread().interrupt();
             return;
         }
 
         advanceInternal();
-        // Passa o número de desembarques decidido por ti para o evento da paragem
+        // Passa o número de desembarques que o utilizador decidir
         simulateStopEvent(nDisembark);
     }
 
-    // This method is used to make the bus advanced down the line
+    // Avanço do autocarro pela linha
     public void advanceInternal() {
 
-        if (direction) { // Going forward(True)
+        if (direction) { // Em frente(True)
             if (currentBusStop.next != null) {
                 currentBusStop = currentBusStop.next;
             } else {
-                // The bus hits the end of the bus line and reverses the way
+                // Inversão da marcha
                 direction = false;
                 if (currentBusStop.previous != null) {
                     currentBusStop = currentBusStop.previous;
                 }
             }
-        } else { // Coming back (False)
+        } else { // A voltar (False)
             if (currentBusStop.previous != null) {
                 currentBusStop = currentBusStop.previous;
             } else {
-                // The bus hits the end of the bus line and reverses the way back
+                // Nova inversão
                 direction = true;
                 if (currentBusStop.next != null) {
                     currentBusStop = currentBusStop.next;
@@ -150,11 +155,11 @@ public class Bus {
 
     public void getPassengers() {
         if (countPassengers == 0) {
-            System.out.println("The bus has no passengers.");
+            System.out.println("Autocarro sem passageiros!");
             return;
         }
 
-        System.out.println("Passengers on board (from first to last):");
+        System.out.println("Passageiros a bordo (por ordem de entrada):");
         int currentIdx = front;
         for (int i = 0; i < countPassengers; i++) {
             System.out.println("- " + passengers[currentIdx].getName());
@@ -162,10 +167,12 @@ public class Bus {
         }
     }
 
+    // Quantidade de passageiros no autocarro
     public int size() {
         return countPassengers;
     }
 
+    // Simulação da chegada à paragem
     public void simulateStopEvent(int nDisembark) {
         if (currentBusStop == null) {
             System.out.println("O autocarro não está em nenhuma paragem atualmente.");
@@ -174,11 +181,13 @@ public class Bus {
 
         System.out.println("\n=== [AUTOCARRO CHEGOU A: " + currentBusStop.getName() + "] ===");
 
-        // 1. Simular Desembarque com base na escolha do utilizador
+        // Simular desembarque com base na escolha do utilizador
         if (nDisembark > countPassengers) {
             System.out.println("ALERT: Não podem desembarcar " + nDisembark + " passageiros. Apenas " + countPassengers
                     + " estão a bordo.");
-            nDisembark = countPassengers; // Desembarca todos os que estão a bordo se o número pedido for maior
+            
+            // Desembarca todos os que estão a bordo se o número pedido for maior
+            nDisembark = countPassengers; 
         }
 
         if (nDisembark > 0) {
@@ -187,7 +196,7 @@ public class Bus {
                 // Remove o passageiro do autocarro
                 Passenger leavingPassenger = remove();
                 if (leavingPassenger != null) {
-                    // REGRA NOVA: Vai diretamente para o fim da fila da paragem atual
+                    // Vai diretamente para o fim da fila da paragem atual, como falado com a professora
                     currentBusStop.queue(leavingPassenger);
                     System.out.println("Passageiro " + leavingPassenger.getName()
                             + " saiu do autocarro e foi para o fim da fila de " + currentBusStop.getName() + ".");
@@ -197,7 +206,7 @@ public class Bus {
             System.out.println("Ninguém selecionado para desembarcar.");
         }
 
-        // 2. Simular Embarque (Tirar da fila da paragem e colocar no autocarro)
+        // Simular Embarque (Tirar da fila da paragem e colocar no autocarro)
         System.out.println("A iniciar o embarque de passageiros em espera...");
         // Guardamos o tamanho inicial da fila para não entrar em loop infinito
         // caso os passageiros que acabaram de sair tentassem reembarcar imediatamente

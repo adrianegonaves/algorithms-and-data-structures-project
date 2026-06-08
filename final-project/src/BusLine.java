@@ -1,16 +1,12 @@
 /**
  * @file: BusLine.java
  * @brief: Sistema de Gestão de Linha de Autocarros - Projeto Final AED
- * @description: Modela a linha de transporte através de uma estrutura de Lista
- *               Duplamente
- *               Ligada de paragens[cite: 18, 19]. É responsável pelas operações
- *               estruturais de inserção[cite: 26],
- *               remoção [cite: 27] e listagem do percurso completo[cite: 28].
- *               Adicionalmente, integra as
- *               implementações manuais dos algoritmos Bubble Sort e Selection
+ * @description: Modela a linha de transporte através de DLL de paragens. É
+ *               responsável pelas operações
+ *               inserção, remoção e listagem do percurso completo.
+ *               Implementações manuais dos algoritmos Bubble Sort e Selection
  *               Sort para ordenar as paragens
- *               por ordem alfabética ou por volume de passageiros[cite: 42, 44,
- *               46, 47].
+ *               por ordem alfabética ou por número de passageiros.
  * @date: Junho de 2026
  * @version: 1.1
  * @authors:
@@ -24,7 +20,6 @@
 
 public class BusLine {
 
-    // Attributes
     BusStop root;
     int size;
 
@@ -33,7 +28,7 @@ public class BusLine {
         size = 0;
     }
 
-    // add a bus stop at the end of the line
+    // Adicionar uma paragem no fim da linha
     public void addBusStop(String name) {
         BusStop newBusStop = new BusStop(name);
 
@@ -50,49 +45,55 @@ public class BusLine {
         size++;
     }
 
+    // Método para remoção de paragens da linha, remove por nome, etnão tem vários
+    // tipos de operação
+    // a considerar
     public void removeBusStop(String targetName) {
 
+        // Caso de não haver nenhum paragem
         if (root == null) {
-            System.out.println("The Bus Line is empty.");
+            System.out.println("A linha está vazia.");
             return;
         }
 
-        // The BusStop to remove is the root
+        // Paragem a remover é a root
         if (root.getName().equals(targetName)) {
             root = root.next;
             if (root != null) {
                 root.previous = null;
             }
-            System.out.println("Bus stop " + targetName + " removed from the start of the line.");
+            System.out.println("Paragem " + targetName + " removida do príncipio da linha.");
             return;
         }
 
-        // We must search in case it's not the previous cases
+        // Se não for nenhum dos casos anteriores vamos procurar.
         BusStop current = root;
         while (current != null && !current.getName().equals(targetName)) {
             current = current.next;
         }
 
-        // We didn't find the stop
+        // A paragem não existe na linha
         if (current == null) {
-            System.out.println("Bus stop " + targetName + " is not part of this line.");
+            System.out.println("Paragem " + targetName + " não faz parte da linha.");
             return;
         }
 
-        // stop to remove is the last one
+        // Paragem é a última
         if (current.next == null) {
             current.previous.next = null;
-            System.out.println("Bus stop " + targetName + " removed from the end.");
+            System.out.println("Paragem " + targetName + " removida do fim da linha.");
         }
-        // the stop is somewhere in the middle
+        // Paragem é algures no meio
         else {
             current.previous.next = current.next;
             current.next.previous = current.previous;
-            System.out.println("Bus stop " + targetName + " removed.");
+            System.out.println("Paragem " + targetName + " removida.");
         }
 
     }
 
+
+    // Listar a linha de autocarro
     public void listBusLine() {
 
         BusStop current = root;
@@ -102,7 +103,6 @@ public class BusLine {
             System.out.print("[" + current.getName() + " (People in queue: " + current.queue.getSize() + ")]");
             if (current.next != null) {
                 System.out.print(" -> ");
-
             }
             current = current.next;
         }
@@ -110,7 +110,8 @@ public class BusLine {
 
     }
 
-    // Método auxiliar para transformar a lista ligada num array temporário
+    // Método auxiliar para transformar a lista ligada num array temporário para facilitar 
+    // as ordenações
     private BusStop[] getStopsAsArray() {
         BusStop[] stops = new BusStop[size];
         BusStop current = root;
@@ -151,7 +152,7 @@ public class BusLine {
         }
     }
 
-    // 2. Selection Sort por Nº de Passageiros (Ordem Decrescente)
+    // 2. Selection Sort por N de Passageiros (Ordem Decrescente)
     public void selectionSortByPassengerCount() {
         if (size <= 1)
             return;

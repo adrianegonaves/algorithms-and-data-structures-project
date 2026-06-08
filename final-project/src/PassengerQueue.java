@@ -41,19 +41,19 @@ public class PassengerQueue {
         queue[rear] = passenger;
         rear = (rear + 1) % queue.length;
         size++;
-        System.out.println("Passenger " + passenger.getName() + " joined the queue.");
+        System.out.println("Passageiro " + passenger.getName() + " juntou-se à fila.");
     }
 
     public Passenger dequeue() {
         if (size > 0) {
             Passenger value = queue[front];
-            System.out.println("Passenger " + value.getName() + " has left the queue.");
+            System.out.println("Passageiro " + value.getName() + " saiu da fila.");
             front = (front + 1) % queue.length;
             size--;
 
             return value;
         } else {
-            throw new RuntimeException("Alert: The queue is empty!");
+            throw new RuntimeException("Alerta: A fila está vazia!");
         }
     }
 
@@ -61,15 +61,15 @@ public class PassengerQueue {
         return size == 0;
     }
 
-    // Double the queue size in case it is full
+    // Duplicar o tamanho caso a fila fique cheia
     private void resize() {
 
         Passenger[] newQueue = new Passenger[queue.length * 2];
 
         int current = front;
 
-        // Considering we are using a circular array for the queue
-        // the copy works differently from the usual array
+        // Tendo em conta que usamos arrays circulares
+        // a cópia tem um funcionamento diferente 
         for (int i = 0; i < size; i++) {
             newQueue[i] = queue[current];
             current = (current + 1) % queue.length;

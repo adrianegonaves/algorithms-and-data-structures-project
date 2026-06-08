@@ -2,10 +2,10 @@
 /**
  * @file: Main.java
  * @brief: Sistema de Gestão de Linha de Autocarros - Projeto Final AED
- * @description: Ponto de entrada (Driver) da aplicação[cite: 54]. Inicializa um cenário de 
- * teste pré-definido com dados intencionalmente desordenados e disponibiliza uma interface 
- * gráfica simples baseada em caixas de diálogo interativas (Swing/JOptionPane) [cite: 73] para 
- * controlo do menu, execução de simulações e exibição dos benchmarks de ordenação[cite: 54, 74].
+ * @description: Main do Sistema de Gestão da Linha de Autocarros. Inicializa um cenário de 
+ * teste pré-definido (pode remover) com dados desordenados e disponibiliza uma interface 
+ * gráfica simples baseada em caixas de diálogo interativas (Swing/JOptionPane) para 
+ * controlo do menu, execução de simulações e exibição dos testes de ordenação.
  * @date: Junho de 2026
  * @version: 1.1
  * @authors:
@@ -16,7 +16,6 @@
  * @uc: Algoritmos e Estruturas de Dados
  */
 
-import javax.swing.JOptionPane;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -30,7 +29,7 @@ public class Main {
         BusLine line = new BusLine();
         Bus bus = new Bus(5); // Autocarro com capacidade para 5 pessoas
 
-        // Carga automática do cenário de teste
+        // Remover Linha se quiser retirar o teste
         inicializarCenarioPredefinido(line);
         bus.setBusLine(line);
 
@@ -65,7 +64,7 @@ public class Main {
                     new Object[] {}, // Remove os botões padrão (OK/Cancelar)
                     null);
 
-            // Criar e estilizar um botão para cada opção
+            // Criar um botão para cada opção
             for (int i = 0; i < options.length; i++) {
                 final int index = i;
                 JButton button = new JButton(options[i]);
@@ -106,9 +105,9 @@ public class Main {
                 break;
             }
 
-            // A partir daqui a tua lógica de switch (case 1, case 2, etc.) mantém-se
-            // exatamente IGUAL
+
             switch (option) {
+                // 1. Adicionar Paragem
                 case 1:
                     String newStop = JOptionPane.showInputDialog(null, "Nome da nova paragem:", "Adicionar Paragem",
                             JOptionPane.QUESTION_MESSAGE);
@@ -117,7 +116,7 @@ public class Main {
                         JOptionPane.showMessageDialog(null, "Paragem '" + newStop + "' adicionada!");
                     }
                     break;
-
+                // 2. Remover Pagarem 
                 case 2:
                     String targetStop = JOptionPane.showInputDialog(null, "Nome da paragem a remover:",
                             "Remover Paragem", JOptionPane.QUESTION_MESSAGE);
@@ -127,7 +126,8 @@ public class Main {
                                 "Operação de remoção concluída (verifica a consola para detalhes).");
                     }
                     break;
-
+                
+                // 3. Adicionar Passageiro
                 case 3:
                     String passengerName = JOptionPane.showInputDialog(null, "Nome do passageiro:",
                             "Adicionar Passageiro", JOptionPane.QUESTION_MESSAGE);
@@ -155,7 +155,8 @@ public class Main {
                         }
                     }
                     break;
-
+                
+                // Simular Avanço do Autocarro
                 case 4:
                     int nDisembark = 0;
                     if (bus.size() > 0) {
@@ -191,6 +192,7 @@ public class Main {
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
 
+                // 5. Ordenar por Nome
                 case 5:
                     System.out.println("\n=============================================");
                     System.out.println("       COMPARAÇÃO DE ORDENAÇÃO POR NOME      ");
@@ -209,7 +211,8 @@ public class Main {
                     JOptionPane.showMessageDialog(null,
                             "Ordenações por Nome concluídas!\nResultados e tempos impressos no terminal.");
                     break;
-
+                
+                // 6. Ordenar por Passageiro
                 case 6:
                     System.out.println("\n=============================================");
                     System.out.println("   COMPARAÇÃO DE ORDENAÇÃO POR PASSAGEIROS   ");
@@ -228,20 +231,41 @@ public class Main {
                     JOptionPane.showMessageDialog(null,
                             "Ordenações por Nº de Passageiros concluídas!\nResultados e tempos impressos no terminal.");
                     break;
-
+                
+                // 7. Estado Atual da Linha
                 case 7:
                     StringBuilder estado = new StringBuilder("--- ESTADO DA LINHA ---\n");
                     BusStop currentStop = line.root;
+
+                    // Vamos buscar a paragem onde o autocarro está atualmente
+                    BusStop paragemDoAutocarro = bus.getCurrentBusStop();
+
                     while (currentStop != null) {
-                        estado.append("[").append(currentStop.getName()).append(" (Fila: ")
-                                .append(currentStop.queue.getSize()).append(")]");
-                        if (currentStop.next != null)
+                        // Verifica se esta paragem do ciclo é a paragem onde o autocarro está
+                        if (paragemDoAutocarro != null && currentStop.getName().equals(paragemDoAutocarro.getName())) {
+                            // Se for, adiciona um indicador visual antes ou junto à paragem
+                            estado.append("[ 🚌 ").append(currentStop.getName().toUpperCase())
+                                    .append(" (Fila: ").append(currentStop.queue.getSize()).append(") ]");
+                        } else {
+                            // Se não for, mostra a paragem normalmente
+                            estado.append("[").append(currentStop.getName())
+                                    .append(" (Fila: ").append(currentStop.queue.getSize()).append(")]");
+                        }
+
+                        if (currentStop.next != null) {
                             estado.append(" -> ");
+                        }
                         currentStop = currentStop.next;
                     }
 
                     estado.append("\n\n--- PASSAGEIROS A BORDO ---");
-                    estado.append("\nTotal atual: ").append(bus.size()).append(" passageiros.");
+                    estado.append("\nTotal atual: ").append(bus.size()).append(" / 5 passageiros.");
+
+                    // Opcional: listar os nomes de quem está dentro do autocarro na própria janela
+                    if (bus.size() > 0) {
+                        estado.append("\nNomes: ");
+                        // Se tiveres um método no autocarro que devolva os nomes, podes concatenar aqui
+                    }
 
                     JOptionPane.showMessageDialog(null, estado.toString(), "Estado Geral do Sistema",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -250,6 +274,7 @@ public class Main {
         }
     }
 
+    // Um cenário para testar
     private static void inicializarCenarioPredefinido(BusLine line) {
         line.addBusStop("Porto");
         line.addBusStop("Santarém");

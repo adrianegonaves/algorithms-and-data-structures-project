@@ -47,7 +47,7 @@ public class BusSystemTest {
         queue.enqueue(new Passenger("Carlos"));
 
         if (queue.getSize() != 3) {
-            System.out.println("❌ FALHOU: Tamanho da fila devia ser 3, mas é " + queue.getSize());
+            System.out.println("FALHOU: Tamanho da fila devia ser 3, mas é " + queue.getSize());
             return;
         }
 
@@ -57,9 +57,9 @@ public class BusSystemTest {
         Passenger p3 = queue.dequeue();
 
         if (p1.getName().equals("Ana") && p2.getName().equals("Bruno") && p3.getName().equals("Carlos")) {
-            System.out.println("✅ SUCESSO: Lógica FIFO e Redimensionamento a funcionar!\n");
+            System.out.println("SUCESSO: Lógica FIFO e Redimensionamento a funcionar!\n");
         } else {
-            System.out.println("❌ FALHOU: A ordem dos passageiros foi alterada. Recebido: "
+            System.out.println("FALHOU: A ordem dos passageiros foi alterada. Recebido: "
                     + p1.getName() + ", " + p2.getName() + ", " + p3.getName());
         }
     }
@@ -87,7 +87,7 @@ public class BusSystemTest {
         bus.board(new Passenger("Passageiro 4"));
         bus.board(new Passenger("Passageiro 5"));
 
-        System.out.println("✅ SUCESSO: Verificação visual do estado do autocarro concluída.\n");
+        System.out.println("SUCESSO: Verificação visual do estado do autocarro concluída.\n");
     }
 
     /**
@@ -117,16 +117,13 @@ public class BusSystemTest {
         System.out.println("O autocarro recuou para: " + bus.busLine.root.next.getName());
 
         if (bus.busLine.root.next.getName().equals("Paragem B")) {
-            System.out.println("✅ SUCESSO: O autocarro inverteu a marcha corretamente no fim da linha!\n");
+            System.out.println("SUCESSO: O autocarro inverteu a marcha corretamente no fim da linha!\n");
         } else {
-            System.out.println("❌ FALHOU: O autocarro perdeu-se na linha.");
+            System.out.println("FALHOU: O autocarro perdeu-se na linha.");
         }
     }
 
-    /**
-     * Teste 4: Testa os algoritmos de ordenação Bubble Sort e Selection Sort
-     * integrados na BusLine.
-     */
+
     /**
      * Teste 4: Benchmark completo e comparação direta entre Bubble Sort e Selection
      * Sort
@@ -143,7 +140,7 @@ public class BusSystemTest {
         line.addBusStop("Lisboa");
         line.addBusStop("Braga");
 
-        // Injetar passageiros para desordenar numericamente as paragens
+        // Injetar passageiros para desordenar as paragens
         line.root.queue(new Passenger("P")); // Porto: 1
 
         line.root.next.queue(new Passenger("P")); // Santarém: 3
